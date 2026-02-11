@@ -1,0 +1,116 @@
+project:
+  map_name: example_zone
+
+paths:
+  input_root: /mnt/c/hyimporter/input
+  output_root: /mnt/c/hyimporter/out
+
+input:
+  allow_8bit_height: false
+
+height:
+  total_height: 320
+  margin_bottom: 12
+  margin_top: 24
+  percentile_low: 1.0
+  percentile_high: 99.0
+  gamma: 0.85
+  sea_level_y: 96
+  bottom_y: 0
+
+hydrology:
+  enabled: true
+  fill_sinks: true
+  river_threshold_percentile: 99.2
+  carve_depth: 2
+  river_mask_name: river
+
+noise:
+  enabled: true
+  macro_amplitude: 6.0
+  macro_wavelength: 256.0
+  micro_amplitude: 2.0
+  micro_wavelength: 32.0
+  seed: 1337
+  suppress_near_water_radius: 5
+  road_mask_name: road
+
+materials:
+  enabled: true
+  default_layer: grass
+  layers:
+    - grass
+    - dirt
+    - rock
+    - sand
+    - snow
+    - mud
+    - gravel
+  snowline_y: 220
+  beach_band_dy: 6
+  cliff_slope_high: 2.2
+  cliff_slope_low: 1.6
+  majority_radius: 1
+  island_min_area: 32
+  palette_match:
+    enabled: false
+    dither: false
+
+resample:
+  target_resolution: null
+
+tiling:
+  tile_size: 512
+  overlap: 16
+
+outputs:
+  export_obj: true
+  export_schematic: true
+  export_bo2: false
+  schematic_full_volume: false
+  bo2_include_subsurface: false
+  minecraft_block_ids:
+    grass: 2
+    dirt: 3
+    rock: 1
+    sand: 12
+    snow: 80
+    mud: 3
+    gravel: 13
+    default: 1
+
+runtime:
+  async_tile_export: true
+  tile_workers: 0
+
+mesh:
+  export_base: true
+  export_shells: true
+  shell_thickness: 1
+  triangulate: true
+  stabilize_bbox:
+    enabled: true
+    bbox_min: [0.0, 0.0, 0.0]
+    bbox_max: [512.0, 320.0, 512.0]
+
+qa:
+  assert_height_range: [0, 319]
+  assert_max_seam_diff: 0
+  write_plots: true
+
+safety:
+  max_vertices_per_tile: 1500000
+  max_obj_bytes_per_tile: 104857600
+  warn_max_tiles: 256
+
+hytale:
+  default_import_height: 320
+  base_fill_item_id: hytale:stone
+  material_item_ids:
+    grass: hytale:grass
+    dirt: hytale:dirt
+    rock: hytale:stone
+    sand: hytale:sand
+    snow: hytale:snow
+    mud: hytale:mud
+    gravel: hytale:gravel
