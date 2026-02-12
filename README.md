@@ -1,4 +1,4 @@
-# HyImporter (Cross-Platform Pipeline)
+# HyImporter
 
 A reproducible terrain pipeline that converts WoW exports (from wow.export on Windows) into seam-safe OBJ tiles for Hytale import, with a strict vertical budget of Y=0..319.
 
