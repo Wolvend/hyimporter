@@ -190,8 +190,14 @@ All parameters are configurable in YAML.
   - `HYIMPORTER_INPUT_ROOT`
   - `HYIMPORTER_OUTPUT_ROOT`
 
+## Roadmap
+The highest-impact next step is a faster, more reliable Hytale-side import path (sparse tiles + async paste mod) so large worlds do not depend on Hytale's OBJ importer.
+
+See: `plan.md`
+
 ## Docs
 - Importer_MCP entry file: `Importer_MCP`
+- Plan (speed + determinism): `plan.md`
 - Windows export workflow: docs/windows_wowexport_runbook.md
 - Hytale import workflow: docs/hytale_import_runbook.md
 - Multi-platform setup: docs/multi_platform_setup.md
