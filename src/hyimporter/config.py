@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import platform
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -12,10 +14,47 @@ class ProjectConfig:
     map_name: str = "example_zone"
 
 
+def _is_windows() -> bool:
+    return platform.system().lower().startswith("win")
+
+
+def _is_wsl() -> bool:
+    if os.environ.get("WSL_DISTRO_NAME"):
+        return True
+    release = platform.release().lower()
+    version = platform.version().lower()
+    return "microsoft" in release or "microsoft" in version
+
+
+def _default_base_dir() -> Path:
+    base_override = os.environ.get("HYIMPORTER_BASE_DIR")
+    if base_override:
+        return Path(base_override).expanduser()
+    if _is_windows():
+        return Path("C:/hyimporter")
+    if _is_wsl() and Path("/mnt/c").exists():
+        return Path("/mnt/c/hyimporter")
+    return Path.home() / "hyimporter"
+
+
+def _default_input_root() -> str:
+    direct = os.environ.get("HYIMPORTER_INPUT_ROOT")
+    if direct:
+        return str(Path(direct).expanduser())
+    return str(_default_base_dir() / "input")
+
+
+def _default_output_root() -> str:
+    direct = os.environ.get("HYIMPORTER_OUTPUT_ROOT")
+    if direct:
+        return str(Path(direct).expanduser())
+    return str(_default_base_dir() / "out")
+
+
 @dataclass
 class PathsConfig:
-    input_root: str = "/mnt/c/hyimporter/input"
-    output_root: str = "/mnt/c/hyimporter/out"
+    input_root: str = field(default_factory=_default_input_root)
+    output_root: str = field(default_factory=_default_output_root)
 
 
 @dataclass

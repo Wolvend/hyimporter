@@ -1,0 +1,11 @@
+{
+  "author": "fixture",
+  "description": "simple hytale fixture",
+  "palette": ["minecraft:stone", "minecraft:dirt", "minecraft:oak_planks"],
+  "blocks": [
+    { "x": 0, "y": 0, "z": 0, "palette": 0 },
+    { "x": 1, "y": 0, "z": 0, "palette": 1 },
+    { "x": 1, "y": 1, "z": 0, "palette": 2 }
+  ]
+}
+

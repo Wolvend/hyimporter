@@ -1,0 +1,6 @@
+{
+  "fixtures/bo2/golden/simple_tree.bo2": "2x3x1",
+  "fixtures/hytale/golden/simple_prefab.json": "2x2x1",
+  "fixtures/schematic/golden/simple_mcedit.schematic": "2x1x1",
+  "fixtures/schematic/golden/simple_sponge.schem": "2x1x1"
+}

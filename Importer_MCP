@@ -1,0 +1,24 @@
+Importer_MCP
+============
+
+Purpose:
+- Post-build AI-style quality reviewer for HyImporter outputs.
+- Produces natural-language quality notes from deterministic QA metrics.
+- Can bridge generated tiles into the bundled `voxelviewer` workspace.
+
+Entry point:
+- Python module: `src/hyimporter/importer_mcp.py`
+
+Main commands:
+- Review only:
+  - `python -m hyimporter.importer_mcp --output-dir <map_out_dir>`
+- Review + index in VoxelViewer:
+  - `python -m hyimporter.importer_mcp --output-dir <map_out_dir> --index-with-voxelviewer --voxelviewer-root <repo>/voxelviewer`
+
+Output artifacts:
+- `<map_out_dir>/qa/importer_mcp_review.json`
+- `<map_out_dir>/qa/importer_mcp_review.md`
+
+Helper scripts:
+- `scripts/connect_voxelviewer.sh`
+- `scripts/connect_voxelviewer.ps1`

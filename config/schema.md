@@ -36,3 +36,7 @@ Notes:
 - Weights are expected in [0, 1] or [0, 255]; pipeline renormalizes per pixel.
 - Masks are binary-ish images; non-zero becomes True.
 - No per-tile normalization is used. All height fitting is global.
+- Path defaults are OS-aware and can be overridden with env vars:
+  - HYIMPORTER_BASE_DIR
+  - HYIMPORTER_INPUT_ROOT
+  - HYIMPORTER_OUTPUT_ROOT

@@ -16,7 +16,7 @@ if [ ! -f "$CFG" ]; then
 fi
 
 if [ ! -d ".venv" ]; then
-  echo "Virtual environment missing. Run bash scripts/wsl_setup.sh first."
+  echo "Virtual environment missing. Run bash scripts/setup_unix.sh (or scripts/wsl_setup.sh on WSL) first."
   exit 1
 fi
 

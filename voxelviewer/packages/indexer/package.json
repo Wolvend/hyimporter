@@ -1,0 +1,24 @@
+{
+  "name": "@voxelviewer/indexer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "cli": "tsx src/cli.ts",
+    "smoke": "tsx src/cli.ts smoke"
+  },
+  "dependencies": {
+    "@voxelviewer/block-registry": "workspace:*",
+    "@voxelviewer/core": "workspace:*",
+    "@voxelviewer/loaders-bo2": "workspace:*",
+    "@voxelviewer/loaders-hytale": "workspace:*",
+    "@voxelviewer/loaders-schematic": "workspace:*",
+    "@voxelviewer/renderer": "workspace:*",
+    "minimist": "^1.2.8"
+  }
+}

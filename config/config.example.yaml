@@ -2,6 +2,9 @@ project:
   map_name: example_zone
 
 paths:
+  # WSL example: /mnt/c/hyimporter/input
+  # Windows example: C:/hyimporter/input
+  # macOS/Linux example: /Users/<you>/hyimporter/input or /home/<you>/hyimporter/input
   input_root: /mnt/c/hyimporter/input
   output_root: /mnt/c/hyimporter/out
 

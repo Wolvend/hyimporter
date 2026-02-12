@@ -3,8 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 
-from .config import load_config
+from .config import load_config, map_output_dir
 from .export import run_pipeline
+from .importer_mcp import run_importer_mcp_review
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,6 +27,17 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Tile export worker count for async mode (0=auto, default from config).",
     )
+    p.add_argument(
+        "--skip-importer-mcp",
+        action="store_true",
+        help="Skip Importer_MCP post-build quality review report generation.",
+    )
+    p.add_argument(
+        "--importer-mcp-fail-on",
+        choices=["none", "needs_review", "fail"],
+        default="none",
+        help="Optional quality gate behavior for Importer_MCP review.",
+    )
     return p.parse_args()
 
 
@@ -39,6 +51,18 @@ def main() -> None:
             raise ValueError("--tile-workers must be >= 0")
         cfg.runtime.tile_workers = int(args.tile_workers)
     summary = run_pipeline(cfg, allow_8bit_override=args.allow_8bit_height)
+    if not args.skip_importer_mcp:
+        report = run_importer_mcp_review(
+            map_output_dir(cfg),
+            fail_on=args.importer_mcp_fail_on,
+            index_with_voxelviewer=False,
+        )
+        summary["importer_mcp"] = {
+            "verdict": report.get("verdict"),
+            "score": report.get("score"),
+            "review_json": str(map_output_dir(cfg) / "qa" / "importer_mcp_review.json"),
+            "review_md": str(map_output_dir(cfg) / "qa" / "importer_mcp_review.md"),
+        }
     print(json.dumps(summary, indent=2, sort_keys=True))
 
 

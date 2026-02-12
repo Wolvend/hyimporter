@@ -1,0 +1,72 @@
+{
+    "name": "@enginehub/schematicwebviewer",
+    "version": "5.0.1",
+    "description": "A web viewer for modern Minecraft schematics",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "files": [
+        "dist/"
+    ],
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        }
+    },
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "yarn tsdown",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "yarn parcel test/test.html --port 3000 --host 0.0.0.0",
+        "type-check": "yarn tsc --noEmit",
+        "lint": "yarn eslint src/",
+        "postinstall": "yarn husky",
+        "precommit": "yarn lint-staged",
+        "prepack": "pinst --disable && yarn build",
+        "postpack": "pinst --enable"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EngineHub/SchematicWebViewer.git"
+    },
+    "author": "EngineHub",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/EngineHub/SchematicWebViewer/issues"
+    },
+    "homepage": "https://github.com/EngineHub/SchematicWebViewer#readme",
+    "dependencies": {
+        "@babylonjs/core": "^8.42.0",
+        "@enginehub/nbt-ts": "^1.3.5",
+        "@enginehub/schematicjs": "^0.10.0",
+        "buffer": "^6.0.3",
+        "deepmerge": "^4.3.1",
+        "gzip-js": "^0.3.2",
+        "jszip": "^3.10.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.2",
+        "@types/gzip-js": "^0.3.5",
+        "eslint": "^9.39.2",
+        "globals": "^16.5.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.2.7",
+        "parcel": "^2.16.3",
+        "pinst": "^3.0.0",
+        "prettier": "^3.7.4",
+        "tsdown": "^0.18.2",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.50.0"
+    },
+    "browserslist": [
+        "last 1 Chrome version"
+    ],
+    "alias": {
+        "process": false
+    },
+    "sideEffects": false,
+    "packageManager": "yarn@4.12.0"
+}

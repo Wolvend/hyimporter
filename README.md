@@ -1,32 +1,37 @@
-# HyImporter (WSL Pipeline)
+# HyImporter (Cross-Platform Pipeline)
 
 A reproducible terrain pipeline that converts WoW exports (from wow.export on Windows) into seam-safe OBJ tiles for Hytale import, with a strict vertical budget of Y=0..319.
 
 HyImporter is currently WoW-focused (via wow.export input packages), but the core architecture is source-agnostic and intended to support additional game/world export formats in future releases.
 
-This repo is designed for:
-- Host OS: Windows (WoW installed on Windows drive)
-- Compute OS: WSL2 Ubuntu (all processing and QA)
-- Export tool: wow.export Windows GUI (required)
+Supported runtime platforms:
+- Windows (PowerShell)
+- WSL/Linux (bash)
+- macOS (bash)
+
+Source workflow right now:
+- Export tool: wow.export Windows GUI (required for WoW extraction)
 - Import target: Hytale Creative Tools OBJ import
+- Recommended for large worlds: async schematic paste using `cc.invic_SchematicLoader`
 
 ## Windows-only tasks (must be done on Windows)
 1. Install and run wow.export GUI, and export map data.
 2. Import generated OBJ tiles into Hytale using Creative Tools -> Import OBJ.
 
-Everything else in this repo runs in WSL.
+Everything else in this repo runs on any supported platform.
 
 ## Directory layout (required)
-Use this shared folder layout so Windows and WSL see the same data:
+Recommended shared folder layout:
 
 C:\\hyimporter\\
   input\\
     <map_name>\\   (Windows writes here)
-  out\\            (WSL writes here)
+  out\\            (pipeline writes here)
 
-WSL view:
-- /mnt/c/hyimporter/input
-- /mnt/c/hyimporter/out
+Examples:
+- Windows: `C:\hyimporter\input`, `C:\hyimporter\out`
+- WSL: `/mnt/c/hyimporter/input`, `/mnt/c/hyimporter/out`
+- macOS/Linux: `$HOME/hyimporter/input`, `$HOME/hyimporter/out`
 
 ## Repo layout
 - HyImporter/
@@ -38,20 +43,36 @@ WSL view:
 - src/hyimporter/
 - tests/
 
-## Quick start (WSL)
-1. Clone this repo into WSL-accessible storage.
-2. Run setup: bash scripts/wsl_setup.sh
-3. Copy config and edit map name: cp config/config.example.yaml config.yaml
-4. Run build: bash scripts/build_world.sh config.yaml
-5. Check outputs:
-   - /mnt/c/hyimporter/out/<map_name>/tiles
-   - /mnt/c/hyimporter/out/<map_name>/qa/summary.json
-   - /mnt/c/hyimporter/out/<map_name>/runbook/hytale_import_runbook.md
+## Quick start
+### Windows (PowerShell)
+1. Clone repo.
+2. Setup env:
+   - `powershell -ExecutionPolicy Bypass -File scripts/setup_windows.ps1`
+3. Create config:
+   - `Copy-Item config/config.example.yaml config.yaml`
+4. Edit `config.yaml`:
+   - `project.map_name`
+   - `paths.input_root` and `paths.output_root`
+5. Build:
+   - `powershell -ExecutionPolicy Bypass -File scripts/build_world.ps1 -Config config.yaml`
+
+### WSL/Linux/macOS (bash)
+1. Clone repo.
+2. Setup env:
+   - `bash scripts/setup_unix.sh`
+   - WSL-only full system setup: `bash scripts/wsl_setup.sh`
+3. Create config:
+   - `cp config/config.example.yaml config.yaml`
+4. Edit `config.yaml`:
+   - `project.map_name`
+   - `paths.input_root` and `paths.output_root`
+5. Build:
+   - `bash scripts/build_world.sh config.yaml`
 
 ## Expected inputs
 The pipeline reads:
 
-/mnt/c/hyimporter/input/<map_name>/
+<input_root>/<map_name>/
   height/height.png            (prefer 16-bit)
   weights/*.png                (optional, recommended)
   weightmaps/*.png             (optional alias)
@@ -64,7 +85,7 @@ The pipeline reads:
 ## Outputs
 The pipeline writes:
 
-/mnt/c/hyimporter/out/<map_name>/
+<output_root>/<map_name>/
   tiles/tile_<i>_<j>.obj
   tiles/tile_<i>_<j>__<material>.obj
   tiles/tile_<i>_<j>.schematic
@@ -73,14 +94,19 @@ The pipeline writes:
   runbook/hytale_import_runbook.md
   runbook/tile_manifest.csv
   qa/summary.json
+  qa/importer_mcp_review.json
+  qa/importer_mcp_review.md
   qa/*.png
 
 ## Build command
-Primary CLI:
+Primary CLI (all platforms):
 python -m hyimporter.build --config config.yaml
 
-Wrapper:
+Wrapper (bash):
 bash scripts/build_world.sh config.yaml
+
+Wrapper (PowerShell):
+powershell -ExecutionPolicy Bypass -File scripts/build_world.ps1 -Config config.yaml
 
 8-bit override (unsafe; explicit only):
 bash scripts/build_world.sh config.yaml --allow-8bit-height
@@ -89,6 +115,52 @@ Deterministic async controls:
 - Default is async tile export with deterministic manifest ordering (`runtime.async_tile_export: true`).
 - Force sync mode: `bash scripts/build_world.sh config.yaml --sync-tiles`
 - Pin workers: `bash scripts/build_world.sh config.yaml --tile-workers 8`
+
+## Async Schematic Import (Recommended For Big Worlds)
+If Hytale's OBJ converter/import freezes on big meshes, use the SchematicLoader mod to paste tiles in async batches.
+
+1. Build with schematics enabled:
+   - `outputs.export_schematic: true`
+   - Keep `outputs.schematic_full_volume: false` (surface-only)
+2. Sync tiles into your Hytale save:
+   - Windows:
+     - `powershell -ExecutionPolicy Bypass -File scripts/sync_to_hytale_schematicloader.ps1 -MapName <map_name> -WorldName <WorldName>`
+   - WSL:
+     - `bash scripts/sync_to_hytale_schematicloader.sh <map_name> /mnt/c/hyimporter/out <WorldName>`
+3. Restart the world/server, then in game:
+   - `/schem list`
+   - `/schem load <tile_file_name>`
+   - `/schem paste`
+
+Importer_MCP post-build review:
+- Enabled by default on `python -m hyimporter.build`.
+- Skip it: `--skip-importer-mcp`
+- Fail on quality: `--importer-mcp-fail-on needs_review` or `--importer-mcp-fail-on fail`
+
+## VoxelViewer connection
+`voxelviewer/` can be used as a foundational GUI/indexer for generated tile assets.
+
+Bridge scripts:
+- Bash: `bash scripts/connect_voxelviewer.sh <map_name> [output_root]`
+- PowerShell:
+  - `powershell -ExecutionPolicy Bypass -File scripts/connect_voxelviewer.ps1 -MapName <map_name> [-OutputRoot C:/hyimporter/out]`
+
+These commands run the Importer_MCP quality review, then index tiles into VoxelViewer.
+
+## Validation / self-test
+Use this to verify "worked vs broken" deterministically:
+
+- Quick confidence suite:
+  - `bash scripts/self_test.sh quick`
+- Full suite:
+  - `bash scripts/self_test.sh full`
+- Windows full suite:
+  - `.\.venv\Scripts\python.exe -m pytest -q`
+
+The quick suite verifies:
+- height bounds remain inside `[0..319]`
+- seam max diff stays `0`
+- sync and async tile export produce equivalent deterministic results
 
 ## Defaults tuned for comprehensive terrain at 320 high
 - Clamp percentiles: [1, 99]
@@ -113,8 +185,15 @@ All parameters are configurable in YAML.
 - 8-bit heightmaps are rejected by default and require explicit override flag.
 - Seam differences > 0 fail the build.
 - `.schematic` and `.bo2` tile outputs are configurable in `outputs.*` config.
+- Default roots are OS-aware and can be overridden with:
+  - `HYIMPORTER_BASE_DIR`
+  - `HYIMPORTER_INPUT_ROOT`
+  - `HYIMPORTER_OUTPUT_ROOT`
 
 ## Docs
+- Importer_MCP entry file: `Importer_MCP`
 - Windows export workflow: docs/windows_wowexport_runbook.md
 - Hytale import workflow: docs/hytale_import_runbook.md
+- Multi-platform setup: docs/multi_platform_setup.md
+- V1 roadmap issue list: docs/v1_roadmap_issue_list.md
 - Common fixes: docs/troubleshooting.md

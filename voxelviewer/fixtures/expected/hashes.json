@@ -1,0 +1,6 @@
+{
+  "fixtures/bo2/golden/simple_tree.bo2": "b2f28aed29a0f3dd6cda19116ca1e33987c238a7f00f1b079f46900cbc279563",
+  "fixtures/hytale/golden/simple_prefab.json": "92aa4cb730d36d178f8a759e4dfba531a292e0012d23346f9345db27f0e1d312",
+  "fixtures/schematic/golden/simple_mcedit.schematic": "0dec4f1d374af22eee84767ea646326ead2c6c4fbf5d580d9bf08a9c0881717c",
+  "fixtures/schematic/golden/simple_sponge.schem": "947167cbaac2ded7470777623ec0372c89dc197ea19c3cf8f842f918a983d7d7"
+}

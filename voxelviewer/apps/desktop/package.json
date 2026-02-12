@@ -1,0 +1,32 @@
+{
+  "name": "@voxelviewer/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.mjs",
+  "scripts": {
+    "build": "vite build --config vite.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "dev": "corepack pnpm run build && corepack pnpm exec electron electron/main.mjs --reboot"
+  },
+  "dependencies": {
+    "@voxelviewer/block-registry": "workspace:*",
+    "@voxelviewer/core": "workspace:*",
+    "@voxelviewer/loaders-bo2": "workspace:*",
+    "@voxelviewer/loaders-hytale": "workspace:*",
+    "@voxelviewer/loaders-schematic": "workspace:*",
+    "electron": "^33.2.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sql.js": "^1.13.0",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.2",
+    "vite": "^7.1.3"
+  }
+}

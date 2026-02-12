@@ -1,0 +1,14 @@
+* text=auto
+
+# Keep bash scripts runnable in WSL/Linux/macOS (no CRLF).
+*.sh text eol=lf
+
+# Python/config/docs are safe with LF everywhere.
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+
+# PowerShell / batch are typically CRLF on Windows.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
