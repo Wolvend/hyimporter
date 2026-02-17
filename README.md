@@ -10,13 +10,9 @@ Supported runtime platforms:
 - macOS (bash)
 
 Source workflow right now:
-- Export tool: wow.export Windows GUI (required for WoW extraction)
+- Export tool: wow.export GUI (required for WoW extraction)
 - Import target: Hytale Creative Tools OBJ import
 - Recommended for large worlds: async schematic paste using `cc.invic_SchematicLoader`
-
-## Windows-only tasks (must be done on Windows)
-1. Install and run wow.export GUI, and export map data.
-2. Import generated OBJ tiles into Hytale using Creative Tools -> Import OBJ.
 
 Everything else in this repo runs on any supported platform.
 
