@@ -158,6 +158,34 @@ The quick suite verifies:
 - seam max diff stays `0`
 - sync and async tile export produce equivalent deterministic results
 
+## MCP control (Codex)
+You can run `hyimporter` as an MCP stdio server and drive it via Codex tools.
+
+1. Install dependencies (inside `hyimporter`):
+   - `python -m pip install -r requirements.txt`
+2. Register MCP server:
+   - `codex mcp add hyimporter -- /absolute/path/to/hyimporter/scripts/run_mcp_server.sh`
+3. Available MCP tools:
+   - `hyimporter_list_maps`
+   - `hyimporter_validate_map`
+   - `hyimporter_build_world`
+   - `hyimporter_obj_to_schematic`
+   - `hyimporter_list_wow_export_objs`
+   - `hyimporter_list_wow_export_maps`
+   - `hyimporter_scan_wow_export_map`
+   - `hyimporter_wow_export_map_export_placements_manifest`
+   - `hyimporter_wow_export_map_models_to_schematic`
+   - `hyimporter_voxelviewer_screenshot_bo2`
+   - `hyimporter_batch_obj_to_schematic`
+
+Example flow:
+1. `hyimporter_list_wow_export_objs` with `export_root=/mnt/e/Games/Battle.net/World of Warcraft`
+2. `hyimporter_obj_to_schematic` for selected OBJ
+3. `hyimporter_validate_map` and then `hyimporter_build_world`
+
+Notes:
+- Path arguments accept Windows-style inputs like `E:\\Games\\...` and will be auto-mapped to `/mnt/e/...` when running in WSL.
+
 ## Defaults tuned for comprehensive terrain at 320 high
 - Clamp percentiles: [1, 99]
 - Gamma: 0.85
